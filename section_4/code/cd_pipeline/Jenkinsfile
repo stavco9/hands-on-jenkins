@@ -16,14 +16,6 @@ pipeline {
 
     stages {
 
-        stage("Debug"){
-            steps {
-                sleep(1000) {
-                    // on interrupt do
-                }
-            }
-        }
-
         stage("Test - Unit tests") {
             steps { runUnittests() }
         }

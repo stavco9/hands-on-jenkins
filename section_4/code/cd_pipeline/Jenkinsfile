@@ -23,9 +23,7 @@ pipeline {
 
         stage("Debug"){
             steps{
-                sleep(1000) {
-                    // on interrupt do
-                }
+                sh 'echo $PATH'
             }
         }
 

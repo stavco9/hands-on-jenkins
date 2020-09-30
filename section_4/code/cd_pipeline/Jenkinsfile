@@ -21,6 +21,12 @@ pipeline {
         //    steps { runUnittests() }
         //}
 
+        stage("Debug"){
+            steps{
+                sh 'type -a "docker"'
+            }
+        }
+
         stage("Build") {
             steps { 
                 buildApp()

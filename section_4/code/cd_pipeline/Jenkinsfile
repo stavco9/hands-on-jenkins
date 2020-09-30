@@ -1,7 +1,12 @@
 #!/usr/bin/groovy
 
 pipeline {
-    agent any
+    agent {
+        kubernetes{
+            label 'jenkins-docker-slave'
+            defaultContainer 'jenkins-docker-slave'
+        }
+    }
 
     options {
         disableConcurrentBuilds()
@@ -20,12 +25,6 @@ pipeline {
         //stage("Test - Unit tests") {
         //    steps { runUnittests() }
         //}
-
-        stage("Debug"){
-            steps{
-                sh 'whoami'
-            }
-        }
 
         stage("Build") {
             steps { 

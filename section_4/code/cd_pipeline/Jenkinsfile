@@ -17,12 +17,15 @@ pipeline {
     stages {
 
         // This is a test comment
-        stage("Test - Unit tests") {
-            steps { runUnittests() }
-        }
+        //stage("Test - Unit tests") {
+        //    steps { runUnittests() }
+        //}
 
         stage("Build") {
-            steps { buildApp() }
+            steps { 
+                buildApp()
+                pushApp()
+            }
         }
 
         stage("Deploy - Dev") {

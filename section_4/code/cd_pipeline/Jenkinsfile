@@ -27,6 +27,12 @@ pipeline {
         //}
 
         stage("Build") {
+            agent {
+                kubernetes{
+                    label 'jenkins-docker-slave'
+                    defaultContainer 'jenkins-docker-slave'
+                }
+            }
             steps { 
                 buildApp()
                 pushApp()

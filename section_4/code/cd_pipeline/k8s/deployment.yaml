@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: hands-on-jenkins-app-prod
-        image: stavco9/hands-on-jenkins-app:29
+        image: stavco9/blabla
         resources:
           limits:
             memory: "500Mi"

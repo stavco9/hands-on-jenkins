@@ -106,12 +106,13 @@ def deploy(environment) {
 
     dir ('section_4/code/cd_pipeline' ) {
         // Replace image tag with the new tag and all the environment names
-        sh '''
-            sed -i 's|image: .*$|image: '"${registryFullImage}"'|g' k8s/deployment.yaml
-            sed -i 's|name: ${deployName}.*$|name: '"${appName}"'|g' k8s/*.yaml
-            sed -i 's|serviceName: .*$|serviceName: '"${appName}"'|g' k8s/ingress.yaml
-            sed -i 's|host: .*$|host: '"${dnsName}"'|g' k8s/ingress.yaml
-            sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
+        bash '''#!/bin/bash 
+
+                sed -i 's|image: .*$|image: '"${registryFullImage}"'|g' k8s/deployment.yaml
+                sed -i 's|name: ${deployName}.*$|name: '"${appName}"'|g' k8s/*.yaml
+                sed -i 's|serviceName: .*$|serviceName: '"${appName}"'|g' k8s/ingress.yaml
+                sed -i 's|host: .*$|host: '"${dnsName}"'|g' k8s/ingress.yaml
+                sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
         '''
         sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
     }

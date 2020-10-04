@@ -15,16 +15,17 @@ pipeline {
     environment {
         PYTHONPATH = "${WORKSPACE}/section_4/code/cd_pipeline"
         registry = 'stavco9/hands-on-jenkins-app'
+        deployName = 'hands-on-jenkins-app'
+        dnsZone = 'stavco9.com'
         registryCredential = '964f61be-7736-4d8f-af4a-8951fccf1fd9'
         dockerImage = ''
     }
 
     stages {
 
-        // This is a test comment
-        //stage("Test - Unit tests") {
-        //    steps { runUnittests() }
-        //}
+        stage("Test - Unit tests") {
+            steps { runUnittests() }
+        }
 
         stage("Build") {
             agent {
@@ -60,8 +61,12 @@ pipeline {
             steps { approve() }
         }
 
-        stage("Deploy - Live") {
-            steps { deploy('live') }
+        stage("Deploy - Production") {
+            when {
+                branch 'master'
+            }
+
+            steps { deploy('prod') }
         }
 
         stage("Test - UAT Live") {
@@ -88,29 +93,27 @@ def pushApp(){
 
 def deploy(environment) {
 
-    def containerName = ''
-    def port = ''
+    def registryFullImage = "${registry}:${BUILD_NUMBER}"
+    def appName = "${deployName}-${environment}"
+    def dnsName = "${deployName}.${environment}.${dnsZone}"
 
-    if ("${environment}" == 'dev') {
-        containerName = "app_dev"
-        port = "8880"
-    } 
-    else if ("${environment}" == 'stage') {
-        containerName = "app_stage"
-        port = "8800"
-    }
-    else if ("${environment}" == 'live') {
-        containerName = "app_live"
-        port = "80"
-    }
-    else {
-        println "Environment not valid"
-        System.exit(0)
-    }
+    //echo appName
 
-    sh "docker ps -f name=${containerName} -q | xargs --no-run-if-empty docker stop"
-    sh "docker ps -a -f name=${containerName} -q | xargs -r docker rm"
-    sh "docker run -d -p ${port}:5000 --name ${containerName} hands-on-jenkins/myapp:${BUILD_NUMBER}"
+    //else {
+    //   println "Environment not valid"
+    //    System.exit(0)
+    //}
+
+    // Replace image tag with the new tag and all the environment names
+    sh'''
+        sed -i "s|image: .*$|image: ${registryFullImage}|g" k8s/deployment.yaml
+        sed -i "s|name: ${deployName}.*$|name: ${appName}|g" k8s/*.yaml
+        sed -i "s|serviceName: .*$|serviceName: ${appName}|g" k8s/ingress.yaml
+        sed -i "s|host: .*$|host: ${dnsName}|g" k8s/ingress.yaml
+        sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' ingress.yaml
+    '''
+    sh "kubectl apply -f k8s/*.yaml"
+    //sh("echo http://`kubectl --namespace=production get service/${FE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${FE_SVC_NAME}")
 
 }
 

@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: hands-on-jenkins-app-prod
+  namespace: hands-on-jenkins-app
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+          app: hands-on-jenkins
+          env: dev
+  template:
+    metadata:
+      name: hands-on-jenkins-app-prod
+      labels:
+        app: hands-on-jenkins
+        env: dev
+    spec:
+      containers:
+      - name: hands-on-jenkins-app-prod
+        image: stavco9/hands-on-jenkins-app:29
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "100m"
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 3      
+        ports:
+        - name: app
+          containerPort: 5000

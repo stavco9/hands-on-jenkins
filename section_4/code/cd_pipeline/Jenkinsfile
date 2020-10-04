@@ -113,7 +113,7 @@ def deploy(environment) {
             sed -i "s|host: .*$|host: ${dnsName}|g" k8s/ingress.yaml
             sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
         '''
-        sh "kubectl apply -f k8s/*.yaml"
+        sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
     }
     //sh("echo http://`kubectl --namespace=production get service/${FE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${FE_SVC_NAME}")
 

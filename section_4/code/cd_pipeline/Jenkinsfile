@@ -98,6 +98,7 @@ def deploy(environment) {
     def dnsName = "${deployName}.${environment}.${dnsZone}"
 
     //echo appName
+    echo ${registryFullImage}
 
     //else {
     //   println "Environment not valid"

@@ -27,18 +27,18 @@ pipeline {
             steps { runUnittests() }
         }
 
-        stage("Build") {
-            agent {
-                kubernetes{
-                    label 'jenkins-docker-slave'
-                    defaultContainer 'jenkins-docker-slave'
-                }
-            }
-            steps { 
-                buildApp()
-                pushApp()
-            }
-        }
+        //stage("Build") {
+        //    agent {
+        //        kubernetes{
+        //            label 'jenkins-docker-slave'
+        //            defaultContainer 'jenkins-docker-slave'
+        //        }
+        //    }
+        //    steps { 
+        //        buildApp()
+        //        pushApp()
+        //    }
+        //}
 
         stage("Deploy - Dev") {
             steps { deploy('dev') }
@@ -104,15 +104,17 @@ def deploy(environment) {
     //    System.exit(0)
     //}
 
-    // Replace image tag with the new tag and all the environment names
-    sh'''
-        sed -i "s|image: .*$|image: ${registryFullImage}|g" k8s/deployment.yaml
-        sed -i "s|name: ${deployName}.*$|name: ${appName}|g" k8s/*.yaml
-        sed -i "s|serviceName: .*$|serviceName: ${appName}|g" k8s/ingress.yaml
-        sed -i "s|host: .*$|host: ${dnsName}|g" k8s/ingress.yaml
-        sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' ingress.yaml
-    '''
-    sh "kubectl apply -f k8s/*.yaml"
+    dir ('section_4/code/cd_pipeline' ) {
+        // Replace image tag with the new tag and all the environment names
+        sh'''
+            sed -i "s|image: .*$|image: ${registryFullImage}|g" k8s/deployment.yaml
+            sed -i "s|name: ${deployName}.*$|name: ${appName}|g" k8s/*.yaml
+            sed -i "s|serviceName: .*$|serviceName: ${appName}|g" k8s/ingress.yaml
+            sed -i "s|host: .*$|host: ${dnsName}|g" k8s/ingress.yaml
+            sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' ingress.yaml
+        '''
+        sh "kubectl apply -f k8s/*.yaml"
+    }
     //sh("echo http://`kubectl --namespace=production get service/${FE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${FE_SVC_NAME}")
 
 }

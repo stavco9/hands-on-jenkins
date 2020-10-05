@@ -27,12 +27,6 @@ pipeline {
 
     stages {
 
-        stage("Debug"){
-            steps{
-                sh 'printenv'
-            }
-        }
-
         stage("Test - Unit tests") {
             steps { runUnittests() }
         }
@@ -69,7 +63,10 @@ pipeline {
 
         stage("Deploy - Production") {
             when {
-                expression { env.BRANCH_NAME == 'master' }
+                anyOf{
+                    branch 'master'
+                    branch 'origin/master'
+                }
             }
 
             steps { deploy('prod') }
@@ -77,7 +74,10 @@ pipeline {
 
         stage("Test - UAT Live") {
             when {
-                expression { env.BRANCH_NAME == 'master' }
+                anyOf{
+                    branch 'master'
+                    branch 'origin/master'
+                }
             }
 
             steps { runUAT() }
@@ -127,7 +127,6 @@ def deploy(environment) {
               sed -i 's|host: .*${'$'}|host: '"${dnsName}"'|g' k8s/ingress.yaml
               sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
         """
-        sh 'cat k8s/deployment.yaml'
 
         withKubeConfig([
                 credentialsId: kubernetesCredential,

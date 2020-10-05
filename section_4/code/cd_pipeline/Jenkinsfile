@@ -63,13 +63,17 @@ pipeline {
 
         stage("Deploy - Production") {
             when {
-                branch 'master'
+                expression { env.BRANCH_NAME == 'master' }
             }
 
             steps { deploy('prod') }
         }
 
         stage("Test - UAT Live") {
+            when {
+                expression { env.BRANCH_NAME == 'master' }
+            }
+
             steps { runUAT() }
         }
     }

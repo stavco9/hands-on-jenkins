@@ -47,21 +47,17 @@ pipeline {
             steps { deploy('dev') }
         }
 
-        //stage("Test - UAT Dev") {
-        //    steps { runUAT(8880) }
-        //}
+        stage("Test - UAT Dev") {
+            steps { runUAT() }
+        }
 
         stage("Deploy - Stage") {
             steps { deploy('stage') }
         }
 
 
-        //stage("Test - UAT Stage") {
-        //   steps { runUAT(8800) }
-        //}
-
-        stage("Approve") {
-            steps { approve() }
+        stage("Test - UAT Stage") {
+           steps { runUAT() }
         }
 
         stage("Deploy - Production") {
@@ -72,10 +68,9 @@ pipeline {
             steps { deploy('prod') }
         }
 
-        //stage("Test - UAT Live") {
-        //    steps { runUAT(80) }
-        //}
-
+        stage("Test - UAT Live") {
+            steps { runUAT() }
+        }
     }
 }
 
@@ -151,6 +146,6 @@ def runUnittests() {
 }
 
 
-def runUAT(port) {
-    sh "section_4/code/cd_pipeline/tests/runUAT.sh ${port}"
+def runUAT() {
+    sh "section_4/code/cd_pipeline/tests/runUAT.sh ${dnsName}"
 }

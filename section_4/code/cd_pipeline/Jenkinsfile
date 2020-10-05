@@ -117,7 +117,7 @@ def deploy(environment) {
               sed -i 's|name: ${deployName}.*${'$'}|name: '"${appName}"'|g' k8s/*.yaml
               sed -i 's|env: .*${'$'}|env: '"${environment}"'|g' k8s/*.yaml
               sed -i 's|serviceName: .*${'$'}|serviceName: '"${appName}"'|g' k8s/ingress.yaml
-              sed -i 's|secretName: .*${'$'}|serviceName: '"${appName}"'|g' k8s/ingress.yaml
+              sed -i 's|secretName: .*${'$'}|secretName: '"${appName}"'|g' k8s/ingress.yaml
               sed -i 's|host: .*${'$'}|host: '"${dnsName}"'|g' k8s/ingress.yaml
               sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
         """

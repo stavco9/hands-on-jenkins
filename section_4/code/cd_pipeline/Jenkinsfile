@@ -22,6 +22,7 @@ pipeline {
         kubernetesCredential = '23ebcd6f-781e-40e0-943c-f31626dbc806'
         kubernetesNamespace = 'hands-on-jenkins-app'
         dockerImage = ''
+        dnsName = ''
     }
 
     stages {
@@ -93,7 +94,7 @@ def deploy(environment) {
 
     def registryFullImage = "${registry}:${BUILD_NUMBER}"
     def appName = "${deployName}-${environment}"
-    def dnsName = "${deployName}.${environment}.${dnsZone}"
+    dnsName = "${deployName}.${environment}.${dnsZone}"
 
     if (environment == 'prod'){
         dnsName = "${deployName}.${dnsZone}"

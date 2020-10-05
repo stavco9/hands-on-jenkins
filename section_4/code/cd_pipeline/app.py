@@ -8,7 +8,8 @@ images = [
         "https://media.giphy.com/media/cKhTE6YDCmPm0p5cWG/giphy.gif",
         "https://media.giphy.com/media/L4fv5eLVk6geaVmkaO/giphy.gif",
         "https://media.giphy.com/media/mpfMDb6MB6EWQ/giphy.gif",
-        "https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif"
+        "https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif",
+        "https://media.giphy.com/media/ASzK5wWjMtc6A/giphy.gif"
 ]
 
 @app.route('/')

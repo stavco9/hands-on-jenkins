@@ -18,6 +18,9 @@ pipeline {
         deployName = 'hands-on-jenkins-app'
         dnsZone = 'stavco9.com'
         registryCredential = '964f61be-7736-4d8f-af4a-8951fccf1fd9'
+        kubernetesUrl = 'https://462d1a51-7954-49d8-afc4-078068dc1760.k8s.ondigitalocean.com'
+        kubernetesCredential = '23ebcd6f-781e-40e0-943c-f31626dbc806'
+        kubernetesNamespace = 'hands-on-jenkins-app'
         dockerImage = ''
     }
 
@@ -97,8 +100,9 @@ def deploy(environment) {
     def appName = "${deployName}-${environment}"
     def dnsName = "${deployName}.${environment}.${dnsZone}"
 
-    //echo appName
-    echo registryFullImage
+    if (environment == 'prod'){
+        dnsName = "${deployName}.${dnsZone}"
+    }
 
     //else {
     //   println "Environment not valid"
@@ -111,12 +115,20 @@ def deploy(environment) {
 
               sed -i 's|image: .*${'$'}|image: '"${registryFullImage}"'|g' k8s/deployment.yaml
               sed -i 's|name: ${deployName}.*${'$'}|name: '"${appName}"'|g' k8s/*.yaml
+              sed -i 's|env: .*${'$'}|env: '"${environment}"'|g'
               sed -i 's|serviceName: .*${'$'}|serviceName: '"${appName}"'|g' k8s/ingress.yaml
               sed -i 's|host: .*${'$'}|host: '"${dnsName}"'|g' k8s/ingress.yaml
               sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml
         """
         sh 'cat k8s/deployment.yaml'
-        sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
+
+        withKubeConfig([
+                credentialsId: kubernetesCredential,
+                serverUrl: kubernetesUrl,
+                namespace: kubernetesNamespace
+            ]){
+            sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
+        }
     }
     //sh("echo http://`kubectl --namespace=production get service/${FE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${FE_SVC_NAME}")
 

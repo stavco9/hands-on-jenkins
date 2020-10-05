@@ -114,6 +114,7 @@ def deploy(environment) {
     //   println "Environment not valid"
     //    System.exit(0)
     //}
+    //
 
     dir ('section_4/code/cd_pipeline' ) {
         // Replace image tag with the new tag and all the environment names

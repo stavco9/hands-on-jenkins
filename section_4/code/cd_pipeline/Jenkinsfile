@@ -30,35 +30,35 @@ pipeline {
             steps { runUnittests() }
         }
 
-        //stage("Build") {
-        //    agent {
-        //        kubernetes{
-        //            label 'jenkins-docker-slave'
-        //            defaultContainer 'jenkins-docker-slave'
-        //        }
-        //    }
-        //    steps { 
-        //        buildApp()
-        //        pushApp()
-        //    }
-        //}
+        stage("Build") {
+            agent {
+                kubernetes{
+                    label 'jenkins-docker-slave'
+                    defaultContainer 'jenkins-docker-slave'
+                }
+            }
+            steps { 
+                buildApp()
+                pushApp()
+            }
+        }
 
         stage("Deploy - Dev") {
             steps { deploy('dev') }
         }
 
-        stage("Test - UAT Dev") {
-            steps { runUAT(8880) }
-        }
+        //stage("Test - UAT Dev") {
+        //    steps { runUAT(8880) }
+        //}
 
         stage("Deploy - Stage") {
             steps { deploy('stage') }
         }
 
 
-        stage("Test - UAT Stage") {
-            steps { runUAT(8800) }
-        }
+        //stage("Test - UAT Stage") {
+        //   steps { runUAT(8800) }
+        //}
 
         stage("Approve") {
             steps { approve() }
@@ -115,7 +115,7 @@ def deploy(environment) {
 
               sed -i 's|image: .*${'$'}|image: '"${registryFullImage}"'|g' k8s/deployment.yaml
               sed -i 's|name: ${deployName}.*${'$'}|name: '"${appName}"'|g' k8s/*.yaml
-              sed -i 's|env: .*${'$'}|env: '"${environment}"'|g'
+              sed -i 's|env: .*${'$'}|env: '"${environment}"'|g' k8s/*.yaml
               sed -i 's|serviceName: .*${'$'}|serviceName: '"${appName}"'|g' k8s/ingress.yaml
               sed -i 's|host: .*${'$'}|host: '"${dnsName}"'|g' k8s/ingress.yaml
               sed -i '/- hosts:/!b;n;c\\    - '"${dnsName}"'' k8s/ingress.yaml

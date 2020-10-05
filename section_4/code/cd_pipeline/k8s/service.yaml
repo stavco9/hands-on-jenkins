@@ -12,3 +12,4 @@ spec:
     protocol: TCP
   selector:
     app: hands-on-jenkins
+    env: dev

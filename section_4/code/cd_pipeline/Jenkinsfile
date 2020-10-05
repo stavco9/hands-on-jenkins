@@ -63,10 +63,7 @@ pipeline {
 
         stage("Deploy - Production") {
             when {
-                anyOf {
-                    expression { env.GIT_BRANCH == 'master' }
-                    expression { env.GIT_BRANCH == 'origin/master' }
-                }
+                branch 'master'
             }
 
             steps { deploy('prod') }
@@ -74,10 +71,7 @@ pipeline {
 
         stage("Test - UAT Live") {
             when {
-                anyOf{
-                    expression { env.GIT_BRANCH == 'master' }
-                    expression { env.GIT_BRANCH == 'origin/master' }
-                }
+                branch 'master'
             }
 
             steps { runUAT() }

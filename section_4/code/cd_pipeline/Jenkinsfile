@@ -157,7 +157,7 @@ def runUnittests() {
 def sendMail() {
     dir ('section_4/code/cd_pipeline/mail' ) {
         withCredentials([file(credentialsId: gmailApiCredential, variable: 'GMAIL_TOKEN')]) {
-            sh "pip3 install --upgrade -r ./requirements.txt"
+            sh "pip3 install --no-cache-dir --upgrade -r ./requirements.txt"
             sh "python3 jenkinsMail.py"
         }
     }

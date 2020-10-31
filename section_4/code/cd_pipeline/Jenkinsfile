@@ -20,12 +20,17 @@ pipeline {
         registryCredential = '964f61be-7736-4d8f-af4a-8951fccf1fd9'
         kubernetesUrl = 'https://462d1a51-7954-49d8-afc4-078068dc1760.k8s.ondigitalocean.com'
         kubernetesCredential = '23ebcd6f-781e-40e0-943c-f31626dbc806'
+        gmailApiCredential = 'db16b4f2-43b2-4b18-9188-ae8be3fea55e'
         kubernetesNamespace = 'hands-on-jenkins-app'
         dockerImage = ''
         dnsName = ''
     }
 
     stages {
+
+        stage("Send Mail for pipeline start"){
+            steps{ sendMail() }
+        }
 
         stage("Test - Unit tests") {
             steps { runUnittests() }
@@ -149,6 +154,14 @@ def runUnittests() {
     sh "python3 section_4/code/cd_pipeline/tests/test_flask_app.py"
 }
 
+def sendMail() {
+    dir ('section_4/code/cd_pipeline/mail' ) {
+        withCredentials([file(credentialsId: gmailApiCredential, variable: 'GMAIL_TOKEN')]) {
+            sh "pip3 install --upgrade -r ./requirements.txt"
+            sh "python3 jenkinsMail.py"
+        }
+    }
+}
 
 def runUAT() {
     sh "section_4/code/cd_pipeline/tests/runUAT.sh ${dnsName}"

@@ -26,7 +26,6 @@ pipeline {
         dnsName = ''
         mailSubject = "Jenkins pipeline for project ${deployName}"
         mailTo = "stavco9@gmail.com"
-        mailBody = ''
     }
 
     stages {

@@ -20,12 +20,25 @@ pipeline {
         registryCredential = '964f61be-7736-4d8f-af4a-8951fccf1fd9'
         kubernetesUrl = 'https://462d1a51-7954-49d8-afc4-078068dc1760.k8s.ondigitalocean.com'
         kubernetesCredential = '23ebcd6f-781e-40e0-943c-f31626dbc806'
+        gmailApiCredential = 'db16b4f2-43b2-4b18-9188-ae8be3fea55e'
         kubernetesNamespace = 'hands-on-jenkins-app'
         dockerImage = ''
         dnsName = ''
+        mailSubject = "Jenkins pipeline for project ${deployName}"
+        mailTo = "stavco9@gmail.com"
     }
 
     stages {
+
+        stage("Send Mail for pipeline start"){
+            steps{
+                script{
+                    env.mailBody = "Started Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}"
+                }
+
+                sendMail()
+            }
+        }
 
         stage("Test - Unit tests") {
             steps { runUnittests() }
@@ -75,6 +88,19 @@ pipeline {
             }
 
             steps { runUAT() }
+        }
+
+        stage("Send Mail for pipeline finish"){
+            steps{
+                script{
+                    env.mailBody = """
+                    Finished Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}
+                    the application is accessible in URL https://${dnsName}
+                    """
+                }
+
+                sendMail()
+            }
         }
     }
 }
@@ -149,6 +175,15 @@ def runUnittests() {
     sh "python3 section_4/code/cd_pipeline/tests/test_flask_app.py"
 }
 
+def sendMail() {
+    dir ('section_4/code/cd_pipeline/mail' ) {
+        withCredentials([file(credentialsId: gmailApiCredential, variable: 'GMAIL_TOKEN')]) {
+            sh 'printenv'
+            sh "pip3 install --no-warn-script-location --no-cache-dir --upgrade -r ./requirements.txt"
+            sh "python3 jenkinsMail.py"
+        }
+    }
+}
 
 def runUAT() {
     sh "section_4/code/cd_pipeline/tests/runUAT.sh ${dnsName}"

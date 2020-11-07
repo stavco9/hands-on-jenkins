@@ -34,10 +34,10 @@ pipeline {
         stage("Send Mail for pipeline start"){
             steps{
                 script{
-                    mailBody = "Started Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}"
+                    env.mailBody = "Started Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}"
                 }
 
-                sendMail(mailTo, mailSubject, mailBody)
+                sendMail()
             }
         }
 
@@ -94,7 +94,7 @@ pipeline {
         stage("Send Mail for pipeline finish"){
             steps{
                 script{
-                    mailBody = """
+                    env.mailBody = """
                     Finished Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}
                     the application is accessible in URL https://${dnsName}
                     """
@@ -176,7 +176,7 @@ def runUnittests() {
     sh "python3 section_4/code/cd_pipeline/tests/test_flask_app.py"
 }
 
-def sendMail(mailTo, mailSubject, mailBody) {
+def sendMail() {
     dir ('section_4/code/cd_pipeline/mail' ) {
         withCredentials([file(credentialsId: gmailApiCredential, variable: 'GMAIL_TOKEN')]) {
             sh 'printenv'

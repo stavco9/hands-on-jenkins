@@ -33,7 +33,7 @@ pipeline {
 
         stage("Send Mail for pipeline start"){
             steps{ 
-                mailBody = String.format('Started Jenkins pipeline for build %s and branch %s', ${BUILD_NUMBER}, ${BRANCH_NAME})
+                mailBody = "Started Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}" 
                 sendMail(mailTo, mailSubject, mailBody) 
             }
         }

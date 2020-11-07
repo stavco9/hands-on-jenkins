@@ -32,9 +32,12 @@ pipeline {
     stages {
 
         stage("Send Mail for pipeline start"){
-            steps{ 
-                mailBody = 'Started Jenkins pipeline for build' //${BUILD_NUMBER} and branch ${BRANCH_NAME}"
-                //sendMail(mailTo, mailSubject, mailBody)
+            steps{
+                script{
+                    mailBody = "Started Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}"
+                }
+
+                sendMail(mailTo, mailSubject, mailBody)
             }
         }
 

@@ -32,9 +32,10 @@ pipeline {
     stages {
 
         stage("Send Mail for pipeline start"){
-            mailBody = String.format('Started Jenkins pipeline for build %s and branch %s', ${BUILD_NUMBER}, ${BRANCH_NAME})
-
-            steps{ sendMail(mailTo, mailSubject, mailBody) }
+            steps{ 
+                mailBody = String.format('Started Jenkins pipeline for build %s and branch %s', ${BUILD_NUMBER}, ${BRANCH_NAME})
+                sendMail(mailTo, mailSubject, mailBody) 
+            }
         }
 
         stage("Test - Unit tests") {

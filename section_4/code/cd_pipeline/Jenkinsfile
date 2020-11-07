@@ -99,7 +99,7 @@ pipeline {
                     """
                 }
 
-                sendMail(mailTo, mailSubject, mailBody)
+                sendMail()
             }
         }
     }

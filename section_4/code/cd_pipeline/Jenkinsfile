@@ -24,12 +24,17 @@ pipeline {
         kubernetesNamespace = 'hands-on-jenkins-app'
         dockerImage = ''
         dnsName = ''
+        mailSubject = "Jenkins pipeline for project ${deployName}"
+        mailTo = "stavco9@gmail.com"
+        mailBody = ''
     }
 
     stages {
 
         stage("Send Mail for pipeline start"){
-            steps{ sendMail() }
+            mailBody = String.format('Started Jenkins pipeline for build %s and branch %s', ${BUILD_NUMBER}, ${BRANCH_NAME})
+
+            steps{ sendMail(mailTo, mailSubject, mailBody) }
         }
 
         stage("Test - Unit tests") {
@@ -154,11 +159,11 @@ def runUnittests() {
     sh "python3 section_4/code/cd_pipeline/tests/test_flask_app.py"
 }
 
-def sendMail() {
+def sendMail(mailTo, mailSubject, mailBody) {
     dir ('section_4/code/cd_pipeline/mail' ) {
         withCredentials([file(credentialsId: gmailApiCredential, variable: 'GMAIL_TOKEN')]) {
             sh "pip3 install --no-warn-script-location --no-cache-dir --upgrade -r ./requirements.txt"
-            sh "python3 jenkinsMail.py"
+            sh "python3 jenkinsMail.py ${mailTo}, ${mailSubject}, ${mailBody}"
         }
     }
 }

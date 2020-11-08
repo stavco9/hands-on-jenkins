@@ -104,8 +104,7 @@ pipeline {
             }
         }
     }
-}
-post {
+    post {
        failure {
             script{
                 env.mailBody = """
@@ -117,6 +116,7 @@ post {
             sendMail()
        }
    }
+}
 
 // steps
 /* groovylint-disable-next-line NoDef */

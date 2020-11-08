@@ -25,7 +25,8 @@ pipeline {
         dockerImage = ''
         dnsName = ''
         mailSubject = "Jenkins pipeline for project ${deployName}"
-        mailTo = 'stavco9@gmail.com, dror.picherski@gmail.com, liorlam@gmail.com'
+        //mailTo = 'stavco9@gmail.com, dror.picherski@gmail.com, liorlam@gmail.com'
+        mailTo = 'stavco9@gmail.com'
     }
 
     stages {
@@ -153,6 +154,8 @@ def deploy(environment) {
                 serverUrl: kubernetesUrl,
                 namespace: kubernetesNamespace
             ]){
+
+            sh 'cat k8s/deployment.yaml'
             sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
         }
     }

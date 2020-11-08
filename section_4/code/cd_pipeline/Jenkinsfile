@@ -204,5 +204,8 @@ def sendMail() {
 }
 
 def runUAT() {
-    sh "section_4/code/cd_pipeline/tests/runUAT.sh ${dnsName}"
+    retry(5){
+        sh "section_4/code/cd_pipeline/tests/runUAT.sh ${dnsName}"
+        sleep 2
+    }
 }

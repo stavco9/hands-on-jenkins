@@ -105,7 +105,19 @@ pipeline {
         }
     }
 }
+post {
+       failure {
+            script{
+                env.mailBody = """
+                Jenkins pipeline for build ${BUILD_NUMBER} and branch ${BRANCH_NAME}
+                has been failed :(
+                """
+            }
 
+            sendMail()
+       }
+   }
+}
 
 // steps
 /* groovylint-disable-next-line NoDef */
@@ -156,6 +168,8 @@ def deploy(environment) {
             ]){
 
             sh 'cat k8s/deployment.yaml'
+            sh 'cat k8s/service.yaml'
+            sh 'cat k8s/ingress.yaml'
             sh 'kubectl apply -f k8s/deployment.yaml -f k8s/service.yaml -f k8s/ingress.yaml'
         }
     }

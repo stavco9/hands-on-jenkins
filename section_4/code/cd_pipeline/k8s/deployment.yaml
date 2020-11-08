@@ -1,23 +1,23 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: dror-andal-prod
+  name: lior-kipod-prod
   namespace: hands-on-jenkins-app
 spec:
   replicas: 1
   selector:
       matchLabels:
-          app: dror-andal
+          app: lior-kipod
           env: dev
   template:
     metadata:
-      name: dror-andal-prod
+      name: lior-kipod-prod
       labels:
-        app: dror-andal
+        app: lior-kipod
         env: dev
     spec:
       containers:
-      - name: dror-andal-prod
+      - name: lior-kipod-prod
         image: stavco9/blabla
         #resources:
           #limits:

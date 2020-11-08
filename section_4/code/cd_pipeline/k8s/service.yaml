@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dror-andal-dev
+  name: lior-kipod-dev
   namespace: hands-on-jenkins-app
   labels:
-    app: dror-andal
+    app: lior-kipod
     env: dev
 spec:
   ports:
   - port: 5000
     protocol: TCP
   selector:
-    app: dror-andal
+    app: lior-kipod
     env: dev

@@ -1,23 +1,23 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: hands-on-jenkins-app-prod
+  name: dror-andal-prod
   namespace: hands-on-jenkins-app
 spec:
   replicas: 1
   selector:
       matchLabels:
-          app: hands-on-jenkins
+          app: dror-andal
           env: dev
   template:
     metadata:
-      name: hands-on-jenkins-app-prod
+      name: dror-andal-prod
       labels:
-        app: hands-on-jenkins
+        app: dror-andal
         env: dev
     spec:
       containers:
-      - name: hands-on-jenkins-app-prod
+      - name: dror-andal-prod
         image: stavco9/blabla
         #resources:
           #limits:

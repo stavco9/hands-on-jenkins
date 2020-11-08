@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: hands-on-jenkins-app-dev
+  name: dror-andal-dev
   namespace: hands-on-jenkins-app
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /

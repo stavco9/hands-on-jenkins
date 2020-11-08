@@ -15,7 +15,7 @@ pipeline {
     environment {
         PYTHONPATH = "${WORKSPACE}/section_4/code/cd_pipeline"
         registry = 'stavco9/hands-on-jenkins-app'
-        deployName = 'hands-on-jenkins-app'
+        deployName = 'dror-andal'
         dnsZone = 'stavco9.com'
         registryCredential = '964f61be-7736-4d8f-af4a-8951fccf1fd9'
         kubernetesUrl = 'https://462d1a51-7954-49d8-afc4-078068dc1760.k8s.ondigitalocean.com'
@@ -25,7 +25,7 @@ pipeline {
         dockerImage = ''
         dnsName = ''
         mailSubject = "Jenkins pipeline for project ${deployName}"
-        mailTo = "stavco9@gmail.com"
+        mailTo = "stavco9@gmail.com dror.picherski@gmail.com liorlam@gmail.com"
     }
 
     stages {

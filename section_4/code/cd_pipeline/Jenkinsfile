@@ -25,7 +25,7 @@ pipeline {
         dockerImage = ''
         dnsName = ''
         mailSubject = "Jenkins pipeline for project ${deployName}"
-        mailTo = ["stavco9@gmail.com", "dror.picherski@gmail.com", "liorlam@gmail.com"]
+        mailTo = 'stavco9@gmail.com, dror.picherski@gmail.com, liorlam@gmail.com'
     }
 
     stages {

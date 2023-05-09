@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent { label 'generic-agent' }
   stages {
     stage('Build') {
       steps {

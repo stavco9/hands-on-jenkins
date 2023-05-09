@@ -1,6 +1,14 @@
 pipeline {
   agent { label 'generic-agent' }
+  options {
+    skipDefaultCheckout true
+  }
   stages {
+    stage('Troubleshoot') {
+      steps {
+        sh 'sleep 600'
+      }
+    }
     stage('Build') {
       steps {
         echo 'Building...'
